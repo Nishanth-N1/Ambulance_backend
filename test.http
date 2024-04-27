@@ -1,0 +1,218 @@
+
+
+
+
+
+
+# POST http://localhost:3000/create-graph
+# Content-Type: application/json
+
+# {
+#   "signals": [
+#     {
+#       "name": "Signal1",
+#       "latitude": 12.345,
+#       "longitude": 67.890,
+#       "count": 3,
+#       "nearestSignals": ["Signal2", "Signal3", "Signal4"]
+#     },
+#     {
+#       "name": "Signal2",
+#       "latitude": 12.456,
+#       "longitude": 67.901,
+#       "count": 2,
+#       "nearestSignals": ["Signal1", "Signal3"]
+#     },
+#     {
+#       "name": "Signal3",
+#       "latitude": 12.567,
+#       "longitude": 67.912,
+#       "count": 1,
+#       "nearestSignals": ["Signal1", "Signal2"]
+#     },
+#     {
+#       "name": "Signal4",
+#       "latitude": 12.678,
+#       "longitude": 67.923,
+#       "count": 2,
+#       "nearestSignals": ["Signal1", "Signal2"]
+#     },
+#     {
+#       "name": "Signal5",
+#       "latitude": 12.608,
+#       "longitude": 60.783,
+#       "count": 2,
+#       "nearestSignals": ["Signal4", "Signal2"]
+#     }
+#   ]
+# }
+
+
+
+
+
+
+
+# POST http://localhost:3000/graph/create-graph
+# Content-Type: application/json
+
+# {
+#   "signals": [
+#     {
+#       "name": "Signal1",
+#       "latitude": 1.345,
+#       "longitude": 6.890,
+#       "count": 3,
+#       "nearestSignals": [
+#         { "name": "Signal2", "distance": 50 },
+#         { "name": "Signal3", "distance": 30 }
+#       ]
+#     },
+#     {
+#       "name": "Signal2",
+#       "latitude": 12.456,
+#       "longitude": 67.901,
+#       "count": 2,
+#       "nearestSignals": [
+#         { "name": "Signal1", "distance": 50 }
+#       ]
+#     },
+#     {
+#       "name": "Signal3",
+#       "latitude": 2.567,
+#       "longitude": 7.912,
+#       "count": 1,
+#       "nearestSignals": [
+#         { "name": "Signal1", "distance": 30 }
+#       ]
+#     }
+#   ]
+# }
+
+
+
+POST http://localhost:3000/graph/create-graph
+Content-Type: application/json
+
+{
+  "signals": [
+    {
+      "name": "Signal1",
+      "latitude": 13.0125857,
+      "longitude": 80.2359052,
+      "count": 3,
+      "nearestSignals": [
+        { "name": "Signal2", "distance": 50 },
+        { "name": "Signal3", "distance": 30 }
+    //    { "name": "Signal5", "distance": 30 }
+
+      ]
+    },
+    {
+      "name": "Signal2",
+      "latitude": 12.456,
+      "longitude": 67.901,
+      "count": 2,
+      "nearestSignals": [
+        { "name": "Signal1", "distance": 50 }
+      ]
+    },
+    {
+      "name": "Signal3",
+      "latitude": 2.567,
+      "longitude": 7.912,
+      "count": 1,
+      "nearestSignals": [
+        { "name": "Signal1", "distance": 30 },
+        { "name": "Signal4", "distance": 20}
+      ]
+    },
+    {
+      "name": "Signal4",
+      "latitude": 1.348,
+      "longitude": 64.870,
+      "count": 3,
+      "nearestSignals": [
+        { "name": "Signal3", "distance": 20 },
+        { "name": "Signal5", "distance": 40 }
+      ]
+    },
+    {
+      "name": "Signal5",
+      "latitude": 1.344,
+      "longitude": 56.890,
+      "count": 3,
+      "nearestSignals": [
+        { "name": "Signal4", "distance": 40 }
+       // { "name": "Signal1", "distance": 30 }
+
+      ]
+    }
+  ]
+}
+
+###
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# POST http://localhost:3000/signal/shortest-path
+# Content-Type: application/json
+
+# {
+#   "currentLatitude": 12.456,
+#   "currentLongitude": 67.901,
+#   "destinationLatitude": 2.567,
+#   "destinationLongitude": 7.912
+# }
+
+
+
+POST http://localhost:3000/signal/shortest-path
+Content-Type: application/json
+
+{
+  "currentLatitude": 13.0125857,
+  "currentLongitude": 80.2359052,
+  "destinationLatitude": 1.344,
+  "destinationLongitude": 56.890
+}
+
+###
+
+
+
+POST http://localhost:3000/auth/register
+Content-Type: application/json
+
+{
+  "driver_id" : "496528",
+  "driver_name" : "Nishanth",
+  "password" : "Nishanth@20",
+  "ambulance_no" : "698745",
+  "driver_phnumber" : "994242568"
+}
+
+
+###
+
+
+POST http://localhost:3000/auth/login
+Content-Type: application/json
+
+{
+  "ambulance_no" : "456",
+  "password" : "1234"
+}
