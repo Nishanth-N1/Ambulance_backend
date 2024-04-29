@@ -91,7 +91,7 @@
 
 
 
-POST http://localhost:3000/graph/create-graph
+POST https://13.239.60.135/graph/create-graph
 Content-Type: application/json
 
 {
@@ -194,13 +194,14 @@ Content-Type: application/json
 
 
 
-POST http://localhost:3000/auth/register
+POST http://13.239.60.135:3000/auth/register`
+i
 Content-Type: application/json
 
 {
   "driver_id" : "496528",
-  "driver_name" : "Nishanth",
-  "password" : "Nishanth@20",
+  "driver_name" : "Deepak",
+  "password" : "Deepak@20",
   "ambulance_no" : "698745",
   "driver_phnumber" : "994242568"
 }
@@ -215,4 +216,14 @@ Content-Type: application/json
 {
   "ambulance_no" : "456",
   "password" : "1234"
+}
+
+
+###
+
+
+POST http://localhost:3000/esp/check
+Content-Type: application/json
+
+{
 }

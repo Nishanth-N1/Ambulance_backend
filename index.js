@@ -54,6 +54,8 @@ const fs = require('fs');
 const create_graph = require('./router/create-graph.js');
 const find_signal = require('./router/find-signals.js');
 const register = require('./router/regsiter');
+const esp = require('./router/esp.js');
+
 const cors = require('cors');
 
 const db = require('./models/database');
@@ -85,7 +87,7 @@ function convertToAdjacencyMatrix(signals) {
 app.use("/graph",create_graph);
 app.use("/signal",find_signal);
 app.use("/auth",register);
-
+app.use("/esp",esp);
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
