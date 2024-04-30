@@ -1,31 +1,3 @@
-// const express = require('express');
-// const net = require('net');
-
-// const app = express();
-// const port = 3000;
-
-// // Create a TCP server
-// const server = net.createServer(socket => {
-//   console.log('Client connected');
-
-//   // Send message to the client
-//   socket.write('Hello from server!\r\n');
-
-//   // Close the connection
-//   socket.end();
-// });
-
-// // Start the TCP server
-// server.listen(port, () => {
-//   console.log(`Server listening on port ${port}`);
-// });
-
-// // Handle errors
-// server.on('error', err => {
-//   console.error('Server error:', err);
-// });
-
-
 const express = require('express');
 const http = require('http');
 const socketIo = require('socket.io');
@@ -51,11 +23,11 @@ io.on('connection', (socket) => {
         }
     });
 
-    // Handle messages from client 1 and send to client 2
+    // Handle messages from client 1 and forward to client 2
     socket.on('message', (data) => {
         if (socket === client1Socket && client2Socket) {
             console.log(`Message from Client 1: ${data}`);
-            client2Socket.emit('message', data);
+            client2Socket.emit('forwardToClient2', data);
             console.log(`Message forwarded to Client 2: ${data}`);
         }
     });
