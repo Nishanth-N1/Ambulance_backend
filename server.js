@@ -100,42 +100,38 @@
 // app.listen(PORT, () => {
 //     console.log(`Server is running on port ${PORT}`);
 // });
-
-
-
 const net = require('net');
 
 const PORT = 3000;
+let nextClientId = 1;
 const clients = {};
 
 const server = net.createServer((socket) => {
-  let clientId = null;
+    const clientId = nextClientId++;
+    clients[clientId] = socket;
+    console.log(`Client ${clientId} connected.`);
 
-  socket.on('data', (data) => {
-    if (!clientId) {
-      clientId = data.toString();
-      clients[clientId] = socket;
-      console.log(`Client ${clientId} connected.`);
-    } else {
-      const receiverId = clientId === '1' ? '2' : '1';
-      const receiverSocket = clients[receiverId];
-      if (receiverSocket) {
-        console.log(`Forwarding message from Client ${clientId} to Client ${receiverId}: ${data}`);
-        receiverSocket.write(data);
-      } else {
-        console.log(`Client ${receiverId} is not connected.`);
-      }
-    }
-  });
+    socket.on('data', (data) => {
+        const message = data.toString().trim();
+        console.log(`Received message from Client ${clientId}: ${message}`);
+        
+        // Forward the message to the other client
+        const receiverId = clientId === 1 ? 2 : 1;
+        const receiverSocket = clients[receiverId];
+        if (receiverSocket) {
+            console.log(`Forwarding message from Client ${clientId} to Client ${receiverId}: ${message}`);
+            receiverSocket.write(message);
+        } else {
+            console.log(`Client ${receiverId} is not connected.`);
+        }
+    });
 
-  socket.on('end', () => {
-    if (clientId) {
-      console.log(`Client ${clientId} disconnected.`);
-      delete clients[clientId];
-    }
-  });
+    socket.on('end', () => {
+        console.log(`Client ${clientId} disconnected.`);
+        delete clients[clientId];
+    });
 });
 
 server.listen(PORT, () => {
-  console.log(`Server listening on port ${PORT}`);
+    console.log(`Server listening on port ${PORT}`);
 });
