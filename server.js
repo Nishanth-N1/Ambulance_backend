@@ -24,17 +24,23 @@ io.on('connection', (socket) => {
     });
 
     // Handle messages from client 1 and forward to client 2
-    socket.on('message', (data) => {
-        if (socket === client1Socket || client2Socket) {
-            console.log(`Message from Client 1: ${data}`);
-            const message = { 
-                sender: 'Client 1', 
-                content: data 
-            };
+// Handle messages from client 1 and forward to client 2
+socket.on('message', (data) => {
+    if (socket === client1Socket || client2Socket) {
+        console.log(`Message from Client 1: ${data}`);
+        const message = { 
+            sender: 'Client 1', 
+            content: data 
+        };
+        if (client2Socket.connected) { // Check if client2Socket is connected
             client2Socket.emit('message', JSON.stringify(message));
             console.log(`Message forwarded to Client 2: ${data}`);
+        } else {
+            console.log(`Client 2 is not connected.`);
         }
-    });
+    }
+});
+
 
     // Handle client disconnection
     socket.on('disconnect', () => {
