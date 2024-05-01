@@ -50,53 +50,92 @@
 // });
 
 
-const express = require('express');
-const bodyParser = require('body-parser');
+// const express = require('express');
+// const bodyParser = require('body-parser');
 
-const app = express();
-const PORT = process.env.PORT || 3000;
+// const app = express();
+// const PORT = process.env.PORT || 3000;
 
-// Middleware to parse JSON bodies
-app.use(bodyParser.json());
+// // Middleware to parse JSON bodies
+// app.use(bodyParser.json());
 
-// Store client IDs
-let client1Id;
-let client2Id;
+// // Store client IDs
+// let client1Id;
+// let client2Id;
 
-// Endpoint to set client IDs
-app.post('/setClientId', (req, res) => {
-    const { clientId } = req.body;
+// // Endpoint to set client IDs
+// app.post('/setClientId', (req, res) => {
+//     const { clientId } = req.body;
 
+//     if (!clientId) {
+//         return res.status(400).json({ error: 'Client ID is required' });
+//     }
+
+//     if (!client1Id) {
+//         client1Id = clientId;
+//         console.log(`Client 1 connected with ID: ${client1Id}`);
+//     } else if (!client2Id) {
+//         client2Id = clientId;
+//         console.log(`Client 2 connected with ID: ${client2Id}`);
+//     }
+
+//     res.status(200).json({ success: true });
+// });
+
+// // Endpoint to receive message from client 1 and forward to client 2
+// app.post('/sendMessage', (req, res) => {
+//     const { message } = req.body;
+
+//     if (!client1Id || !client2Id) {
+//         return res.status(400).json({ error: 'Both client IDs are required' });
+//     }
+
+//     console.log(`Message from Client 1: ${message}`);
+//     // Forward the message to client 2 (you can implement this logic here)
+
+//     res.status(200).json({ success: true });
+// });
+
+// // Start the server
+// app.listen(PORT, () => {
+//     console.log(`Server is running on port ${PORT}`);
+// });
+
+
+
+const net = require('net');
+
+const PORT = 3000;
+const clients = {};
+
+const server = net.createServer((socket) => {
+  let clientId = null;
+
+  socket.on('data', (data) => {
     if (!clientId) {
-        return res.status(400).json({ error: 'Client ID is required' });
+      clientId = data.toString();
+      clients[clientId] = socket;
+      console.log(`Client ${clientId} connected.`);
+    } else {
+      const receiverId = clientId === '1' ? '2' : '1';
+      const receiverSocket = clients[receiverId];
+      if (receiverSocket) {
+        console.log(`Forwarding message from Client ${clientId} to Client ${receiverId}: ${data}`);
+        receiverSocket.write(data);
+      } else {
+        console.log(`Client ${receiverId} is not connected.`);
+      }
     }
+  });
 
-    if (!client1Id) {
-        client1Id = clientId;
-        console.log(`Client 1 connected with ID: ${client1Id}`);
-    } else if (!client2Id) {
-        client2Id = clientId;
-        console.log(`Client 2 connected with ID: ${client2Id}`);
+  socket.on('end', () => {
+    if (clientId) {
+      console.log(`Client ${clientId} disconnected.`);
+      delete clients[clientId];
     }
-
-    res.status(200).json({ success: true });
+  });
 });
 
-// Endpoint to receive message from client 1 and forward to client 2
-app.post('/sendMessage', (req, res) => {
-    const { message } = req.body;
-
-    if (!client1Id || !client2Id) {
-        return res.status(400).json({ error: 'Both client IDs are required' });
-    }
-
-    console.log(`Message from Client 1: ${message}`);
-    // Forward the message to client 2 (you can implement this logic here)
-
-    res.status(200).json({ success: true });
-});
-
-// Start the server
-app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+server.listen(PORT, () => {
+  console.log(`Server listening on port ${PORT}`);
 });
