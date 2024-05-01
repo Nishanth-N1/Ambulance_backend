@@ -25,7 +25,7 @@ io.on('connection', (socket) => {
 
     // Handle messages from client 1 and forward to client 2
     socket.on('message', (data) => {
-        if (socket === client1Socket && client2Socket) {
+        if (socket === client1Socket || client2Socket) {
             console.log(`Message from Client 1: ${data}`);
             const message = { 
                 sender: 'Client 1', 
