@@ -1,53 +1,53 @@
-// const express = require('express');
-// const http = require('http');
-// const socketIo = require('socket.io');
+const express = require('express');
+const http = require('http');
+const socketIo = require('socket.io');
 
-// const app = express();
-// const server = http.createServer(app);
-// const io = socketIo(server);
+const app = express();
+const server = http.createServer(app);
+const io = socketIo(server);
 
-// let client1Socket;
-// let client2Socket;
+let client1Socket;
+let client2Socket;
 
-// io.on('connection', (socket) => {
-//     console.log('A client connected');
+io.on('connection', (socket) => {
+    console.log('A client connected');
 
-//     // Handle client ID assignment
-//     socket.on('setClientId', (clientId) => {
-//         if (clientId === 'Client 1') {
-//             client1Socket = socket;
-//             console.log(`Client 1 connected with ID: ${clientId}`);
-//         } else if (clientId === 'Client 2') {
-//             client2Socket = socket;
-//             console.log(`Client 2 connected with ID: ${clientId}`);
-//         }
-//     });
+    // Handle client ID assignment
+    socket.on('setClientId', (clientId) => {
+        if (clientId === 'Client 1') {
+            client1Socket = socket;
+            console.log(`Client 1 connected with ID: ${clientId}`);
+        } else if (clientId === 'Client 2') {
+            client2Socket = socket;
+            console.log(`Client 2 connected with ID: ${clientId}`);
+        }
+    });
 
-//     // Handle messages from client 1 and forward to client 2
-//     socket.on('message', (data) => {
-//         if (socket === client1Socket && client2Socket) {
-//             console.log(`Message from Client 1: ${data}`);
-//             client2Socket.emit('forwardToClient2', data);
-//             console.log(`Message forwarded to Client 2: ${data}`);
-//         }
-//     });
+    // Handle messages from client 1 and forward to client 2
+    socket.on('message', (data) => {
+        if (socket === client1Socket && client2Socket) {
+            console.log(`Message from Client 1: ${data}`);
+            client2Socket.emit('forwardToClient2', data);
+            console.log(`Message forwarded to Client 2: ${data}`);
+        }
+    });
 
-//     // Handle client disconnection
-//     socket.on('disconnect', () => {
-//         if (socket === client1Socket) {
-//             console.log('Client 1 disconnected');
-//             client1Socket = null;
-//         } else if (socket === client2Socket) {
-//             console.log('Client 2 disconnected');
-//             client2Socket = null;
-//         }
-//     });
-// });
+    // Handle client disconnection
+    socket.on('disconnect', () => {
+        if (socket === client1Socket) {
+            console.log('Client 1 disconnected');
+            client1Socket = null;
+        } else if (socket === client2Socket) {
+            console.log('Client 2 disconnected');
+            client2Socket = null;
+        }
+    });
+});
 
-// const PORT = process.env.PORT || 3000;
-// server.listen(PORT, () => {
-//     console.log(`Server listening on port ${PORT}`);
-// });
+const PORT = process.env.PORT || 3000;
+server.listen(PORT, () => {
+    console.log(`Server listening on port ${PORT}`);
+});
 
 
 // const express = require('express');
@@ -101,43 +101,47 @@
 //     console.log(`Server is running on port ${PORT}`);
 // });
 
-const net = require('net');
 
-const PORT = 3000;
-const clients = {};
+// const net = require('net');
 
-const server = net.createServer((socket) => {
-    let clientId = null;
+// // Dictionary to store client sockets
+// const clientSockets = {};
 
-    socket.on('data', (data) => {
-        const message = data.toString().trim();
-        if (!clientId) {
-            // If client ID is not set, set it and store the socket
-            clientId = message;
-            clients[clientId] = socket;
-            console.log(`Client ${clientId} connected.`);
-        } 
-            // If client ID is set, forward the message to the other client
-            const receiverId = clientId === 'Client1' ? 'Client2' : 'Client1';
-            const receiverSocket = clients[receiverId];
-            if (receiverSocket) {
-                console.log(`Received message from ${clientId}: ${message}`);
-                console.log(`Forwarding message from ${clientId} to ${receiverId}: ${message}`);
-                receiverSocket.write(`${clientId}: ${message}`);
-            } else {
-                console.log(`Client ${receiverId} is not connected.`);
-            }
+// // Counter for client IDs
+// let clientId = 1;
+
+// // Create a TCP server
+// const server = net.createServer(socket => {
+//     // Assign client ID
+//     const currentClientId = clientId++;
+//     clientSockets[currentClientId] = socket;
+
+//     // Send client ID to the client
+//     socket.write(`You are client ${currentClientId}\n`);
+
+//     // Handle incoming data from clients
+//     socket.on('data', data => {
+//         console.log(`Received message from client ${currentClientId}: ${data.toString()}`);
         
-    });
+//         // Print message received from client 1
+//         if (currentClientId === 1) {
+//             console.log(`Message received from client 1: ${data.toString()}`);
+//             // Forward a custom message to the other client
+//             const otherClientId = 2;
+//             const customMessage = "This is a custom message from the server to client 2";
+//             clientSockets[otherClientId].write(customMessage + '\n');
+//         }
+//     });
 
-    socket.on('end', () => {
-        if (clientId) {
-            console.log(`Client ${clientId} disconnected.`);
-            delete clients[clientId];
-        }
-    });
-});
+//     // Handle client disconnection
+//     socket.on('end', () => {
+//         console.log(`Client ${currentClientId} disconnected.`);
+//         delete clientSockets[currentClientId];
+//     });
+// });
 
-server.listen(PORT, () => {
-    console.log(`Server listening on port ${PORT}`);
-});
+// // Start the server
+// const PORT = 3000;
+// server.listen(PORT, () => {
+//     console.log(`Server is listening on port ${PORT}`);
+// });
