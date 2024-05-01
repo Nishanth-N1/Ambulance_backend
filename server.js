@@ -121,6 +121,7 @@ const server = net.createServer((socket) => {
             const receiverId = clientId === 'Client1' ? 'Client2' : 'Client1';
             const receiverSocket = clients[receiverId];
             if (receiverSocket) {
+                console.log(`Received message from ${clientId}: ${message}`);
                 console.log(`Forwarding message from ${clientId} to ${receiverId}: ${message}`);
                 receiverSocket.write(`${clientId}: ${message}`);
             } else {
