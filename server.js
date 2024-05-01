@@ -27,7 +27,11 @@ io.on('connection', (socket) => {
     socket.on('message', (data) => {
         if (socket === client1Socket && client2Socket) {
             console.log(`Message from Client 1: ${data}`);
-            client2Socket.emit('forwardToClient2', data);
+            const message = { 
+                sender: 'Client 1', 
+                content: data 
+            };
+            client2Socket.emit('message', JSON.stringify(message));
             console.log(`Message forwarded to Client 2: ${data}`);
         }
     });
