@@ -116,7 +116,7 @@ const server = net.createServer((socket) => {
             clientId = message;
             clients[clientId] = socket;
             console.log(`Client ${clientId} connected.`);
-        } else {
+        } 
             // If client ID is set, forward the message to the other client
             const receiverId = clientId === 'Client1' ? 'Client2' : 'Client1';
             const receiverSocket = clients[receiverId];
@@ -127,7 +127,7 @@ const server = net.createServer((socket) => {
             } else {
                 console.log(`Client ${receiverId} is not connected.`);
             }
-        }
+        
     });
 
     socket.on('end', () => {
