@@ -100,14 +100,17 @@
 // app.listen(PORT, () => {
 //     console.log(`Server is running on port ${PORT}`);
 // });
+
+
+
 const net = require('net');
 
 const PORT = 3000;
-let nextClientId = 1;
+//let nextClientId = 1;
 const clients = {};
 
 const server = net.createServer((socket) => {
-    const clientId = nextClientId++;
+    const clientId =   1;
     clients[clientId] = socket;
     console.log(`Client ${clientId} connected.`);
 
